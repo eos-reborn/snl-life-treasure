@@ -3,6 +3,8 @@ const players_len = 4
 const players = ["p1", "p2", "p3", "p4"]
 const players_colors = ["Yellow", "Green", "Purple", "Red"]  // p1 is red, p2 is yellow etc
 const players_correction = [-3, 55, 110, 165]  // corresponds to "players"; is "top" in css?
+const diceContainer = document.querySelector(".dice-container");
+const NUMBER_OF_DICE = 1;
 let players_counter = 0
 
 let rollingSound = new Audio('rpg-dice-rolling-95182.mp3')
@@ -98,6 +100,72 @@ const updatePlayerCounter = () => {
     if (players_counter+1 > players_len) {
         players_counter -= players_len
     }
+}
+
+function randomizeDice(diceContainer, numberOfDice) {
+    // for starting up the game, randomizing the dice
+    diceContainer.innerHTML = "";
+
+    let lastDiceRoll;
+
+    for (let i = 0; i < numberOfDice; i++) {
+        const random = Math.floor((Math.random() * 6) + 1);
+        const dice = createDice(random);
+
+        diceContainer.appendChild(dice);
+        lastDiceRoll = random;
+    }
+
+    return lastDiceRoll;
+}
+
+function createDice(num) {
+    const dotPositionMatrix = {
+		1: [
+			[50, 50]
+		],
+		2: [
+			[20, 20],
+			[80, 80]
+		],
+		3: [
+			[20, 20],
+			[50, 50],
+			[80, 80]
+		],
+		4: [
+			[20, 20],
+			[20, 80],
+			[80, 20],
+			[80, 80]
+		],
+		5: [
+			[20, 20],
+			[20, 80],
+			[50, 50],
+			[80, 20],
+			[80, 80]
+		],
+		6: [
+			[20, 20],
+			[20, 80],
+			[50, 20],
+			[50, 80],
+			[80, 20],
+			[80, 80]
+		]
+	};
+    
+    const dice = document.createElement("div");
+    dice.classList.add("dice");
+    for (const dotPosition of dotPositionMatrix[num]) {
+        const dot = document.createElement("div")
+        dot.classList.add("dice-dot")
+        dot.style.setProperty("--top", dotPosition[0] + "%");
+        dot.style.setProperty("--left", dotPosition[1] + "%");
+        dice.appendChild(dot);
+    }
+    return dice; // completed dice with requested num of dots
 }
 
 function play(player, psum, correction, num) {
@@ -246,33 +314,25 @@ function play(player, psum, correction, num) {
     }
 }
 
+// Execute at game start up
+randomizeDice(diceContainer, NUMBER_OF_DICE); 
 
 document.getElementById("diceBtn").addEventListener("click", function () {
-    rollingSound.play()
-    roll = Math.floor(Math.random() * (6 - 1 + 1) + 1)
-    document.getElementById("dice").innerText = roll
+    let lastDiceRoll = NaN;
+    const intervalHandler = setInterval(() => {
+        // setting to a handler so can cancel this scheduled 50ms task
+        lastDiceRoll = randomizeDice(diceContainer, NUMBER_OF_DICE); 
+    }, 50);
+    rollingSound.play();
+    
+    setTimeout(() => {
+        clearInterval(intervalHandler);
 
+        // <Attempt to create more players>
+        document.getElementById('turn-display').innerText = players_colors[players_counter] + "'s Turn : ";
+        // play('p1', 'p1sum', 0, roll)
+        play(players[players_counter], players[players_counter] + 'sum', players_correction[players_counter], lastDiceRoll);
 
-    // if (tog % 2 != 0) {
-    //     document.getElementById('turn-display').innerText = "Yellow's Turn : "
-    //     play('p1', 'p1sum', 0, roll)
-
-    // }
-
-    // else if (tog % 2 == 0) {
-    //     document.getElementById('turn-display').innerText = "Red's Turn : "
-
-    //     play('p2', 'p2sum', 55, roll)
-
-    // }
-
-    // tog = tog + 1
-
-
-    // <Attempt to create more players>
-    document.getElementById('turn-display').innerText = players_colors[players_counter] + "'s Turn : "
-    // play('p1', 'p1sum', 0, roll)
-    play(players[players_counter], players[players_counter] + 'sum', players_correction[players_counter], roll)
-
-    updatePlayerCounter()
+    updatePlayerCounter();
+    }, 650); // stop the interval task after 1 sec
 })
