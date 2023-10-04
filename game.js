@@ -254,19 +254,23 @@ function play(player, psum, correction, num) {
         new_sum = 100 - (new_sum - 100)
     }
 
-    if (new_sum in snakes_n_ladders) {
-        document.getElementById("cause").innerText = square_to_text[new_sum]
-        new_sum = snakes_n_ladders[new_sum]
-        document.getElementById("effect").innerText = square_to_text[new_sum]
-    } else {
-        document.getElementById("cause").innerText = ""
-        document.getElementById("effect").innerText = ""
-    }
-
-    // update player_sums object with the new_sum
-    player_sums[psum] = new_sum
-
     moveChess(player, new_sum, correction)
+    setTimeout(() => {
+        // pause for 1 sec: waiting the first move to complete
+        if (new_sum in snakes_n_ladders) {
+            document.getElementById("cause").innerText = square_to_text[new_sum]
+            document.getElementById("effect").innerText = square_to_text[snakes_n_ladders[new_sum]]
+            new_sum = snakes_n_ladders[new_sum]
+        } else {
+            document.getElementById("cause").innerText = ""
+            document.getElementById("effect").innerText = ""
+        }
+    
+        // update player_sums object with the new_sum
+        player_sums[psum] = new_sum
+    
+        moveChess(player, new_sum, correction)
+    }, 1000);
 }
 
 // Execute at game start up
