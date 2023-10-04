@@ -1,19 +1,14 @@
 // let tog = 1
-const players_len = 30
-const players = ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "p12", "p13", "p14", "p15", "p16", "p17", "p18", "p19", "p20", "p21", "p22", "p23", "p24", "p25", "p26", "p27", "p28", "p29", "p30"];
-const players_colors = ["Eggplant", "Emerald", "Plum", "Xanadu", "Goldenrod", "Dandelion", "Peach", "Gold", "Cotton", "Cherry", "Chestnut", "Blush", "Ash", "Sunset", "Tumbleweed", "Orchid", "Honeydew", "Coral", "Lion",  "Carrot", "Pearl", "Ruby", "Green Tea", "Lavender", "Lemon", "Ginger", "Famous", "Bone", "Amethyst", "Cardinal"]  // p1 is Cardinal, p2 is Eggplant etc
-const players_correction = [-3, 55, 110, 165, 222, 278, 335, 390, 445, 501, 557, 615, 670, 725, 782, 838, 895, 950, 1005, 1062, 1117, 1175, 1230, 1286, 1341, 1398, 1453, 1510, 1565, 1621]  // corresponds to "players"; is "top" in css?
+let players_len = 30
+let players = ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "p12", "p13", "p14", "p15", "p16", "p17", "p18", "p19", "p20", "p21", "p22", "p23", "p24", "p25", "p26", "p27", "p28", "p29", "p30"];
+let players_colors = ["Eggplant", "Emerald", "Plum", "Xanadu", "Goldenrod", "Dandelion", "Peach", "Gold", "Cotton", "Cherry", "Chestnut", "Blush", "Ash", "Sunset", "Tumbleweed", "Orchid", "Honeydew", "Coral", "Lion",  "Carrot", "Pearl", "Ruby", "Green Tea", "Lavender", "Lemon", "Ginger", "Famous", "Bone", "Amethyst", "Cardinal"]  // p1 is Cardinal, p2 is Eggplant etc
+let players_correction = [-3, 55, 110, 165, 222, 278, 335, 390, 445, 501, 557, 615, 670, 725, 782, 838, 895, 950, 1005, 1062, 1117, 1175, 1230, 1286, 1341, 1398, 1453, 1510, 1565, 1621]  // corresponds to "players"; is "top" in css?
 const diceContainer = document.querySelector(".dice-container");
 const NUMBER_OF_DICE = 1;
 let players_counter = 0
 
 let rollingSound = new Audio('rpg-dice-rolling-95182.mp3')
 let winSound = new Audio('winharpsichord-39642.mp3')
-
-// let p1sum = 0
-// let p2sum = 0
-// let p3sum = 0
-// let p4sum = 0
 
 let player_sums = {
     'p1sum': 0,
@@ -295,6 +290,23 @@ function play(player, psum, correction, num) {
 
 // Execute at game start up
 randomizeDice(diceContainer, NUMBER_OF_DICE); 
+players_len = Number(prompt("Number of players (min 1, max 30)", 10));
+players = players.slice(0, players_len)
+if (players_len > 30) {
+    players_len = 30
+}
+if (players_len <= 1) {
+    players_colors = []
+} else {
+    players_colors = players_colors.slice(0, players_len-1)
+}
+players_colors.push("Cardinal")
+players_correction = players_correction.slice(0, players_len)
+//Loop to make the correct pieces/players to be visible
+for (let player of players) {
+    document.getElementById(player).style.display = "block";
+}
+
 
 document.getElementById("diceBtn").addEventListener("click", function () {
     let lastDiceRoll = NaN;
