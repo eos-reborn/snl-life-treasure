@@ -188,21 +188,25 @@ function moveChess(player, sum, correction) {
 
     else if (sum == 100) {
         winSound.play()
-        if (player == 'p1') {
-            alert("Red Won !!")
-        }
-        else if (player == 'p2') {
-            alert("Yellow Won !!")
-        }
 
-        else if (player == 'p3') {
-            alert("Green Won !!")
-        }
-
-        else if (player == 'p4') {
-            alert("Purple Won !!")
-        }
-        location.reload()
+        setTimeout(() => {
+            // put in setTimeout otherwise winSound won't play
+            if (player == 'p1') {
+                alert("Red Won !!")
+            }
+            else if (player == 'p2') {
+                alert("Yellow Won !!")
+            }
+    
+            else if (player == 'p3') {
+                alert("Green Won !!")
+            }
+    
+            else if (player == 'p4') {
+                alert("Purple Won !!")
+            }
+            location.reload();
+        }, 150);
     }
 
     else {  // box 11-99
