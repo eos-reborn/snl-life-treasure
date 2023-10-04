@@ -1,8 +1,8 @@
 // let tog = 1
-const players_len = 4
-const players = ["p1", "p2", "p3", "p4"]
-const players_colors = ["Yellow", "Green", "Purple", "Red"]  // p1 is red, p2 is yellow etc
-const players_correction = [-3, 55, 110, 165]  // corresponds to "players"; is "top" in css?
+const players_len = 30
+const players = ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "p12", "p13", "p14", "p15", "p16", "p17", "p18", "p19", "p20", "p21", "p22", "p23", "p24", "p25", "p26", "p27", "p28", "p29", "p30"];
+const players_colors = ["Eggplant", "Emerald", "Plum", "Xanadu", "Goldenrod", "Dandelion", "Peach", "Gold", "Cotton", "Cherry", "Chestnut", "Blush", "Ash", "Sunset", "Tumbleweed", "Orchid", "Honeydew", "Coral", "Lion",  "Carrot", "Pearl", "Ruby", "Green Tea", "Lavender", "Lemon", "Ginger", "Famous", "Bone", "Amethyst", "Cardinal"]  // p1 is Cardinal, p2 is Eggplant etc
+const players_correction = [-3, 55, 110, 165, 222, 278, 335, 390, 445, 501, 557, 615, 670, 725, 782, 838, 895, 950, 1005, 1062, 1117, 1175, 1230, 1286, 1341, 1398, 1453, 1510, 1565, 1621]  // corresponds to "players"; is "top" in css?
 const diceContainer = document.querySelector(".dice-container");
 const NUMBER_OF_DICE = 1;
 let players_counter = 0
@@ -21,7 +21,31 @@ let player_sums = {
     'p3sum': 0,
     'p4sum': 0,
     'p5sum': 0,
-    'p6sum': 0
+    'p6sum': 0,
+    'p7sum': 0,
+    'p8sum': 0,
+    'p9sum': 0,
+    'p10sum': 0,
+    'p11sum': 0,
+    'p12sum': 0,
+    'p13sum': 0,
+    'p14sum': 0,
+    'p15sum': 0,
+    'p16sum': 0,
+    'p17sum': 0,
+    'p18sum': 0,
+    'p19sum': 0,
+    'p20sum': 0,
+    'p21sum': 0,
+    'p22sum': 0,
+    'p23sum': 0,
+    'p24sum': 0,
+    'p25sum': 0,
+    'p26sum': 0,
+    'p27sum': 0,
+    'p28sum': 0,
+    'p29sum': 0,
+    'p30sum': 0
 }
 
 const snakes_n_ladders = {
@@ -191,19 +215,11 @@ function moveChess(player, sum, correction) {
 
         setTimeout(() => {
             // put in setTimeout otherwise winSound won't play
-            if (player == 'p1') {
-                alert("Red Won !!")
-            }
-            else if (player == 'p2') {
-                alert("Yellow Won !!")
-            }
-    
-            else if (player == 'p3') {
-                alert("Green Won !!")
-            }
-    
-            else if (player == 'p4') {
-                alert("Purple Won !!")
+            player_num = player.substring(1);  // remove 1st char, eg: 'p301' will get '301'
+            if (player_num == '1') {
+                alert("Cardinal Won!!")
+            } else {
+                alert(`${players_colors[player_num - 2]}` + " Won!!")
             }
             location.reload();
         }, 150);
