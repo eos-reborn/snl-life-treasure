@@ -10,10 +10,19 @@ let players_counter = 0
 let rollingSound = new Audio('rpg-dice-rolling-95182.mp3')
 let winSound = new Audio('winharpsichord-39642.mp3')
 
-let p1sum = 0
-let p2sum = 0
-let p3sum = 0
-let p4sum = 0
+// let p1sum = 0
+// let p2sum = 0
+// let p3sum = 0
+// let p4sum = 0
+
+let player_sums = {
+    'p1sum': 0,
+    'p2sum': 0,
+    'p3sum': 0,
+    'p4sum': 0,
+    'p5sum': 0,
+    'p6sum': 0
+}
 
 const snakes_n_ladders = {
     // Ladders
@@ -168,91 +177,10 @@ function createDice(num) {
     return dice; // completed dice with requested num of dots
 }
 
-function play(player, psum, correction, num) {
-    // num is roll; p1sum is p1's location
-    let sum
-    if (psum == 'p1sum') {
-        p1sum = p1sum + num
-        
-        if (p1sum > 100) {
-            p1sum = 100 - (p1sum - 100)
-        }
-
-        if (p1sum in snakes_n_ladders) {
-            document.getElementById("cause").innerText = square_to_text[p1sum]
-            p1sum = snakes_n_ladders[p1sum]
-            document.getElementById("effect").innerText = square_to_text[p1sum]
-        } else {
-            document.getElementById("cause").innerText = ""
-            document.getElementById("effect").innerText = ""
-        }
-
-        sum = p1sum
-    }
-
-    if (psum == 'p2sum') {
-
-        p2sum = p2sum + num
-
-        if (p2sum > 100) {
-            p2sum = 100 - (p2sum - 100)
-        }
-        
-        if (p2sum in snakes_n_ladders) {
-            document.getElementById("cause").innerText = square_to_text[p2sum]
-            p2sum = snakes_n_ladders[p2sum]
-            document.getElementById("effect").innerText = square_to_text[p2sum]
-        }else {
-            document.getElementById("cause").innerText = ""
-            document.getElementById("effect").innerText = ""
-        }
-
-        sum = p2sum
-    }
-
-    if (psum == 'p3sum') {
-
-        p3sum = p3sum + num
-
-        if (p3sum > 100) {
-            p3sum = 100 - (p3sum - 100)
-        }
-        
-        if (p3sum in snakes_n_ladders) {
-            document.getElementById("cause").innerText = square_to_text[p3sum]
-            p3sum = snakes_n_ladders[p3sum]
-            document.getElementById("effect").innerText = square_to_text[p3sum]
-        }else {
-            document.getElementById("cause").innerText = ""
-            document.getElementById("effect").innerText = ""
-        }
-
-        sum = p3sum
-    }
-
-    if (psum == 'p4sum') {
-
-        p4sum = p4sum + num
-
-        if (p4sum > 100) {
-            p4sum = 100 - (p4sum - 100)
-        }
-        
-        if (p4sum in snakes_n_ladders) {
-            document.getElementById("cause").innerText = square_to_text[p4sum]
-            p4sum = snakes_n_ladders[p4sum]
-            document.getElementById("effect").innerText = square_to_text[p4sum]
-        }else {
-            document.getElementById("cause").innerText = ""
-            document.getElementById("effect").innerText = ""
-        }
-
-        sum = p4sum
-    }
-
-    document.getElementById(`${player}`).style.transition = `linear all .85s`
-
-
+function moveChess(player, sum, correction) {
+    /**
+     * Update the position of a chess
+     */
     if (sum < 10) {
         document.getElementById(`${player}`).style.left = `${(sum - 1) * 62}px`
         document.getElementById(`${player}`).style.top = `${-0 * 62 - correction}px`
@@ -312,6 +240,33 @@ function play(player, psum, correction, num) {
 
         }
     }
+}
+
+function play(player, psum, correction, num) {
+    /**
+     * play('p1', 'p1sum', 0, roll)
+     */
+    // num is roll; p1sum is p1's location
+    let new_sum = player_sums[psum] + num
+    document.getElementById(`${player}`).style.transition = `linear all .85s`
+
+    if (new_sum > 100) { 
+        new_sum = 100 - (new_sum - 100)
+    }
+
+    if (new_sum in snakes_n_ladders) {
+        document.getElementById("cause").innerText = square_to_text[new_sum]
+        new_sum = snakes_n_ladders[new_sum]
+        document.getElementById("effect").innerText = square_to_text[new_sum]
+    } else {
+        document.getElementById("cause").innerText = ""
+        document.getElementById("effect").innerText = ""
+    }
+
+    // update player_sums object with the new_sum
+    player_sums[psum] = new_sum
+
+    moveChess(player, new_sum, correction)
 }
 
 // Execute at game start up
