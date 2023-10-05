@@ -7,8 +7,12 @@ const diceContainer = document.querySelector(".dice-container");
 const NUMBER_OF_DICE = 1;
 let players_counter = 0
 
+// Sound effects
 let rollingSound = new Audio('rpg-dice-rolling-95182.mp3')
-let winSound = new Audio('winharpsichord-39642.mp3')
+let winSound = new Audio('goodresult.mp3')
+let ladderSound = new Audio('yayladder.mp3')
+let snakeSound = new Audio('cobrahiss.mp3')
+snakeSound.volume = 0.6
 
 let player_sums = {
     'p1sum': 0,
@@ -43,8 +47,7 @@ let player_sums = {
     'p30sum': 0
 }
 
-const snakes_n_ladders = {
-    // Ladders
+const ladders = {
     1: 38,
     4: 14,
     9: 31,
@@ -57,7 +60,8 @@ const snakes_n_ladders = {
     70: 90,
     72: 91,
     80: 99,
-    // snakes
+}
+const snakes = {
     17: 7,
     32: 13,
     35: 24, 
@@ -272,10 +276,17 @@ function play(player, psum, correction, num) {
     moveChess(player, new_sum, correction)
     setTimeout(() => {
         // pause for 1 sec: waiting the first move to complete
-        if (new_sum in snakes_n_ladders) {
+        let ladder_or_snake = NaN;
+        if (new_sum in ladders) {
             document.getElementById("cause").innerText = square_to_text[new_sum]
-            document.getElementById("effect").innerText = square_to_text[snakes_n_ladders[new_sum]]
-            new_sum = snakes_n_ladders[new_sum]
+            document.getElementById("effect").innerText = square_to_text[ladders[new_sum]]
+            new_sum = ladders[new_sum]
+            ladder_or_snake = "ladder"
+        } else if (new_sum in snakes) {
+            document.getElementById("cause").innerText = square_to_text[new_sum]
+            document.getElementById("effect").innerText = square_to_text[snakes[new_sum]]
+            new_sum = snakes[new_sum]
+            ladder_or_snake = "snake"
         } else {
             document.getElementById("cause").innerText = ""
             document.getElementById("effect").innerText = ""
@@ -284,6 +295,12 @@ function play(player, psum, correction, num) {
         // update player_sums object with the new_sum
         player_sums[psum] = new_sum
     
+        if (ladder_or_snake === "ladder") {
+            ladderSound.play();
+        } else if (ladder_or_snake === "snake") {
+            snakeSound.play();
+        }
+
         moveChess(player, new_sum, correction)
     }, 1000);
 }
